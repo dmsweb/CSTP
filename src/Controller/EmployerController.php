@@ -109,14 +109,18 @@ class EmployerController extends AbstractController
     /**
     * @Route("/listeEmployes", name="liste", methods={"GET"})
     */
-    public function listerEmploye(EmployeRepository $ripos )
+    public function listerEmploye(Request $request, EmployeRepository $ripos )
     {
             $employe= new Employe();
-            $list= $ripos->findAll();
-
-            // dd($list);
+            
+            $page = $request->query->get('page');
+            if (is_null($page) || $page < 1 ) {
+               $page= 1;
+               
+            }
+            $limite=2;
             $list= $this->getDoctrine()->getRepository(Employe::class);
-            $liste= $list->findAll();
+            $liste= $ripos->findAllEmploye($page, $limite);
 
             $data= [];
             $i=0;

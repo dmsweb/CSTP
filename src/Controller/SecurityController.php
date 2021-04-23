@@ -52,14 +52,20 @@ class SecurityController extends AbstractController
    /**
     * @Route("/ListeUser", name="ListeUser", methods={"GET"})
     */
-    public function listerUser(UserRepository $repos )
+    public function listerUser(Request $request, UserRepository $repos )
     {
             $users= new User();
             $list= $repos->findAll();
 
-            // dd($list);
+            $page = $request->query->get('page');
+            if (is_null($page) || $page < 1 ) {
+               $page= 1;
+               $limite=2;
+            }
+            
             $list= $this->getDoctrine()->getRepository(User::class);
-            $liste= $list->findAll();
+            $liste= $list->findAllUser($page,$limite);
+            // dd($liste);
 
             $data= [];
             $i=0;
@@ -101,5 +107,5 @@ class SecurityController extends AbstractController
             return $this->json($data, 200);
     }
 
-    
+
 }
