@@ -36,7 +36,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
-    public function findAllUser($page, $limit)
+    public function listerUser($page, $limit)
     {
         $query = $this->createQueryBuilder('p')
         ->getQuery()
