@@ -27,22 +27,16 @@ class ListeUserController extends AbstractController
        
    }
     /**
-     * @Route("/lister/users", name="liste_user", methods={"GET"})
+     * @Route("/users", name="liste_user", methods={"GET"})
      */
     public function listerUser(Request $request, UserRepository $repos)
     {
         $users= new User();
         $list= $repos->findAll();
-
-
-        $page = $request->query->get('page');
-        if (is_null($page) || $page < 1) {
-            $page= 1;
-        }
-        $limite= 4;
+        
        
         $list= $this->getDoctrine()->getRepository(User::class);
-        $liste= $list->listerUser($page, $limite);
+        $liste= $list->findAll();
         // dd($liste);
 
         $data= [];
@@ -63,6 +57,7 @@ class ListeUserController extends AbstractController
                 }
             }
         }
+        
         elseif($profile=== 'ROLE_SECRETAIRE')
         {
             foreach($liste as $user)
@@ -86,4 +81,4 @@ class ListeUserController extends AbstractController
 }
 
 
-}
+}																																																																										

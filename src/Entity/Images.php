@@ -82,6 +82,7 @@ class Images
      * @var string|null
      *
      * @ORM\Column(nullable=true)
+     *@Groups({"read"})
      */
     public $filePath;
 

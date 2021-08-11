@@ -9,11 +9,23 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
- * @ApiResource()
- * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ApiResource( 
+ *   collectionOperations={
+ *          "get",
+ *          "post"={  
+ *  "access_control"="is_granted('POST', object)",
+*}
+ *     }
+ * )
+ * 
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User implements UserInterface
 {
@@ -21,51 +33,50 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"read","write"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"user:read", "user:write"})
+     * @ORM\Column(type="string", length=180)
+     * @Groups({"read","write"})
      */
     private $username;
-
-    // /**
-    //  * @ORM\Column(type="json")
-    //  */
-    // private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"user:read", "user:write"})
+     * @Assert\Length(min="8", minMessage="Votre mot de passe doit contenir minimum 8 caractères")
+     * @Groups({"write"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"read","write"})
      */
     private $isActive;
 
-
+ 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Employe", mappedBy="idUser")
-     * @Groups({"user:read", "user:write"})
+     * @Groups({"read","write"})
      */
     private $employes;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Profile::class, inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Profile", inversedBy="users", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read","write"})
      */
     private $profile;
 
+     
     public function __construct()
     {
         $this->employes = new ArrayCollection();
         $this->isActive = true;
+        $this->profile=   new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,16 +101,26 @@ class User implements UserInterface
         return $this;
     }
 
-   /**
-* @see UserInterface
-*/
-public function getRoles(): array
-{
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        return [strtoupper($this->profile->getLibelle())];
+    }
 
-    $roles[]= strtoupper($this->profile->getLibelle());
+    
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
 
-return array_unique($roles);
-}
+    public function setProfile(?Profile $profile): self
+    {
+        $this->profile = $profile;
+
+        return $this;
+    }
 
     /**
      * @see UserInterface
@@ -145,7 +166,6 @@ return array_unique($roles);
         return $this;
     }
 
-
     /**
      * @return Collection|Employe[]
      */
@@ -174,19 +194,5 @@ return array_unique($roles);
         }
 
         return $this;
-    }
-
-    public function getProfile(): ?Profile
-    {
-        return $this->profile;
-    }
-
-    public function setProfile(?Profile $profile): self
-    {
-        $this->profile = $profile;
-
-        return $this;
-    }
-
-  
+    }  
 }

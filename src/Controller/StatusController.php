@@ -15,10 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class StatusController extends AbstractController
 {
     /**
-     * @Route("/status/{id}", name="status", methods={"GET"})
+     * @Route("/status/{id}", name="status_desable", methods={"GET"})
      */
-    public function blocStatus($id)
-    {  $repo = $this->getDoctrine()->getRepository(User::class);
+    public function status($id)
+    {
+        $repo = $this->getDoctrine()->getRepository(User::class);
               $user = $repo->find($id);
               $status = '';
         if($user->getIsActive() === true)

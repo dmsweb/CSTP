@@ -35,7 +35,7 @@ class EmployerController extends AbstractController
     public function AjouterEmployer(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $value= json_decode($request->getContent());
-        if (isset($value->noms,$value->naissance,$value->adresse,$value->tel,$value->cin,$value->genre,$value->familiale,$value->idService,$value->username,$value->password,$value->profile,$value->fonction))
+        if (isset($value->noms,$value->naissance,$value->adresse,$value->telephone,$value->cin,$value->genre,$value->sfamiliale,$value->idService,$value->username,$value->password,$value->profile,$value->fonction))
          {
             $daterecrut= new \DateTime();
             $dateEmb=    new  \DateTime();
@@ -74,10 +74,10 @@ class EmployerController extends AbstractController
             $employe->setNoms($value->noms);
             $employe->setNaissance($value->naissance);
             $employe->setAdresse($value->adresse);
-            $employe->setTelephone($value->tel);
+            $employe->setTelephone($value->telephone);
             $employe->setCin($value->cin);
             $employe->setGenre($value->genre);
-            $employe->setSfamiliale($value->familiale);
+            $employe->setSfamiliale($value->sfamiliale);
             $employe->setIdUser($user);
             $employe->setIdService($service);
             $employe->setDateRecrut($daterecrut);

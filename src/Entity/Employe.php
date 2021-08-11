@@ -6,11 +6,13 @@ use App\Entity\Images;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\EmployeRepository;
 use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\File\file;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\File\file;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ApiResource()
@@ -22,73 +24,87 @@ class Employe
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"read","write"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read","write"})
      */
     private $matricule;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read","write"})
      */
     private $noms;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read","write"})
      */
     private $naissance;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read","write"})
      */
     private $adresse;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read","write"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read","write"})
      */
     private $cin;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read","write"})
      */
     private $genre;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read","write"})
      */
     private $sfamiliale;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"read","write"})
      */
     private $dateRecrut;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"read","write"})
      */
     private $dateEmbauche;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="employes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read","write"})
      */
     private $idUser;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Conge", mappedBy="employe")
+     * @Groups({"read","write"})
      */
     private $conges;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Service", inversedBy="employes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read","write"})
      */
     private $idService;
 
@@ -98,23 +114,29 @@ class Employe
      * @ORM\ManyToOne(targetEntity=Images::class)
      * @ORM\JoinColumn(nullable=true)
      * @ApiProperty(iri="http://schema.org/image")
+     * @Groups({"read","write"})
      */
-    public $image;
+    public $images;
 
     /**
      * @ORM\ManyToOne(targetEntity=Fonction::class, inversedBy="employes")
+     * @Groups({"read","write"})
      */
     private $fonction;
 
     /**
      * @ORM\OneToMany(targetEntity=Permission::class, mappedBy="employers")
+     * @Groups({"read","write"})
      */
     private $permissions;
 
     public function __construct()
     {
-        $this->conges = new ArrayCollection();
+        $this->conges =      new ArrayCollection();
         $this->permissions = new ArrayCollection();
+        $this->fonction=     new ArrayCollection();
+        $this->idService=    new ArrayCollection();
+        $this->idUser=       new ArrayCollection();
     }
 
     public function getId(): ?int

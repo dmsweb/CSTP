@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ServiceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ServiceRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * @ApiResource()
@@ -18,23 +20,25 @@ class Service
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"read","write"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read","write"})
      */
     private $nomService;
 
-    
-
     /**
      * @ORM\OneToMany(targetEntity=Employe::class, mappedBy="idService")
+     * @Groups({"read","write"})
      */
     private $employes;
 
     /**
      * @ORM\OneToMany(targetEntity=Fonction::class, mappedBy="service")
+     * @Groups({"read","write"})
      */
     private $fonctions;
 

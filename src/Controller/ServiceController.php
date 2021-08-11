@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Service;
 use App\Entity\Fonction;
 use App\Controller\ServiceController;
+use App\Repository\ServiceRepository;
+use App\Repository\FonctionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -94,4 +96,39 @@ class ServiceController extends AbstractController
        ];
        return new JsonResponse($data, 500);
     }
+
+     /**
+     * @Route("/services", name="services", methods={"GET"})
+     */
+    public function listerService(ServiceRepository $ripos)
+    {
+       $serve= new Service();
+       $affiche= $ripos->findAll();
+       
+       $affiche= $this->getDoctrine()->getRepository(Service::class);
+       $result= $affiche->findAll();
+      // dd($result);
+
+       $data= $result;
+       
+       return $this->json($data, 200);
+    }
+    
+     /**
+     * @Route("/fonctions", name="fonctions", methods={"GET"})
+     */
+    public function listerFonction(FonctionRepository $ripos)
+    {
+       $serve= new Fonction();
+       $affiche= $ripos->findAll();
+       
+       $affiche= $this->getDoctrine()->getRepository(Fonction::class);
+       $result= $affiche->findAll();
+      // dd($result);
+
+       $data= $result;
+       
+       return $this->json($data, 200);
+    }
+   
 }

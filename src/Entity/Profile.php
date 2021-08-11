@@ -27,12 +27,13 @@ class Profile
     private $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="profile")
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="profile")
      */
     private $users;
 
     public function __construct()
     {
+       
         $this->users = new ArrayCollection();
     }
 
@@ -56,6 +57,7 @@ class Profile
     /**
      * @return Collection|User[]
      */
+
     public function getUsers(): Collection
     {
         return $this->users;
@@ -82,10 +84,9 @@ class Profile
 
         return $this;
     }
-
-   
-
-  
-
+    public function __toString()
+    {
+        return $this->libelle;
+    }
     
 }
